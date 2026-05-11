@@ -30,6 +30,8 @@ namespace ClinicApp2.UI
                 Console.WriteLine("2. View Patients");
                 Console.WriteLine("3. Create Appointment");
                 Console.WriteLine("4. View Appointments");
+                Console.WriteLine("5. View Available Slots");
+                Console.WriteLine("6. Cancel Appointment");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("\nChoose: ");
@@ -53,9 +55,17 @@ namespace ClinicApp2.UI
                         ViewAppointmentsMenu();
                         break;
 
+                    case "5":
+                        ViewAvailableSlotsMenu();
+                        break;
+                    case "6":
+                        CancelAppointmentMenu();
+                        break;
+
                     case "0":
                         running = false;
                         break;
+
 
                     default:
                         Console.WriteLine("Invalid choice.");
@@ -138,13 +148,8 @@ namespace ClinicApp2.UI
                 return;
             }
 
-            Console.Write("Appointment Date (yyyy-MM-dd HH:mm): ");
-
-            DateTime date;
-            while (!DateTime.TryParse(Console.ReadLine(), out date))
-            {
-                Console.WriteLine("Enter a valid date (example: 2026-05-15 14:00):");
-            }
+            DateTime date = 
+                InputHelper.ReadDateTime("Appointment Date (yyyy-MM-dd HH:mm): ");
 
             Console.Write("Treatment Type: ");
             string treatment = Console.ReadLine()!;
@@ -185,6 +190,52 @@ namespace ClinicApp2.UI
                     Console.WriteLine(appointment);
                 }
             }
+
+            Pause();
+        }
+        private void ViewAvailableSlotsMenu()
+        {
+            Console.Clear();
+
+            Console.Write("Enter date (yyyy-MM-dd): ");
+            DateTime day = InputHelper.ReadDateTime("Date: ");
+
+            List<DateTime> slots = _appointmentService.GetAvailableSlots(day);
+
+            Console.WriteLine("\nAvailable Slots:");
+
+            if (slots.Count == 0)
+            {
+                Console.WriteLine("No available slots.");
+            }
+            else
+            {
+                foreach (var slot in slots)
+                {
+                    Console.WriteLine(slot.ToString("HH:mm"));
+                }
+            }
+
+            Pause();
+        }
+        private void CancelAppointmentMenu()
+        {
+            Console.Clear();
+
+            Console.Write("Enter Appointment ID to cancel: ");
+            int id;
+
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Console.WriteLine("Invalid ID. Try again:");
+            }
+
+            bool removed = _appointmentService.CancelAppointment(id);
+
+            if (removed)
+                Console.WriteLine("Appointment cancelled.");
+            else
+                Console.WriteLine("Appointment not found.");
 
             Pause();
         }

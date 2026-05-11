@@ -14,13 +14,13 @@ namespace ClinicApp2.Models
         public bool IsBooked { get; set; }
 
         public Appointment(int id, Patient patient, DateTime date,
-            string treatment, bool isBooked)
+            string treatment)
         {
             ID = id;
             Patient = patient;
             Date = date;
             Treatment = treatment;
-            IsBooked = isBooked;
+            
         }
 
         public override string ToString()

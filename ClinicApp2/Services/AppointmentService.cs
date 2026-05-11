@@ -10,21 +10,20 @@ namespace ClinicApp2.Services
         private List<Appointment> _appointments = new();
         private int _nextId = 1;
 
-        public bool CreateAppointment(
-            Patient patient,
-            DateTime date,
+        public bool CreateAppointment(Patient patient,
+            DateTime date, 
             string treatmentType)
         {
-            bool slotTaken = _appointments.Any(a => a.Date == date);
+            bool overlap = _appointments.Any(a =>
+                date < a.Date.AddHours(1) &&
+                a.Date < date.AddHours(1)
+            );
 
-            if (slotTaken)
-            {
+            if (overlap)
                 return false;
-            }
 
-            Appointment appointment =
-                new(_nextId++, patient, date, treatmentType, true);
-
+            Appointment appointment = 
+                new Appointment(_nextId++, patient, date, treatmentType);
             _appointments.Add(appointment);
 
             return true;
