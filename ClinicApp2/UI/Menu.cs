@@ -32,6 +32,7 @@ namespace ClinicApp2.UI
                 Console.WriteLine("4. View Appointments");
                 Console.WriteLine("5. View Available Slots");
                 Console.WriteLine("6. Cancel Appointment");
+                Console.WriteLine("7. View Appointments by Day");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("\nChoose: ");
@@ -60,6 +61,9 @@ namespace ClinicApp2.UI
                         break;
                     case "6":
                         CancelAppointmentMenu();
+                        break;
+                    case "7":
+                        ViewAppointmentsByDayMenu();
                         break;
 
                     case "0":
@@ -236,6 +240,36 @@ namespace ClinicApp2.UI
                 Console.WriteLine("Appointment cancelled.");
             else
                 Console.WriteLine("Appointment not found.");
+
+            Pause();
+        }
+        private void ViewAppointmentsByDayMenu()
+        {
+            Console.Clear();
+
+            Console.Write("Enter date (yyyy-MM-dd): ");
+
+            DateTime day;
+            while (!DateTime.TryParse(Console.ReadLine(), out day))
+            {
+                Console.WriteLine("Invalid date. Try again:");
+            }
+
+            var appointments = _appointmentService.GetAppointmentsByDay(day);
+
+            Console.WriteLine($"\nAppointments for {day:yyyy-MM-dd}");
+
+            if (appointments.Count == 0)
+            {
+                Console.WriteLine("No appointments found.");
+            }
+            else
+            {
+                foreach (var a in appointments)
+                {
+                    Console.WriteLine($"{a.Date:HH:mm} | {a.Patient.Name} | {a.Treatment} | ID: {a.ID}");
+                }
+            }
 
             Pause();
         }
