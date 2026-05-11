@@ -15,6 +15,9 @@ namespace ClinicApp2.UI
         {
             _patientService = new PatientService();
             _appointmentService = new AppointmentService();
+
+            _patientService.Load();
+            _appointmentService.Load();
         }
 
         public void Start()
@@ -67,8 +70,9 @@ namespace ClinicApp2.UI
                         break;
 
                     case "0":
-                        running = false;
-                        break;
+                        _patientService.Save();
+                        _appointmentService.Save();
+                        running = false; break;
 
 
                     default:
