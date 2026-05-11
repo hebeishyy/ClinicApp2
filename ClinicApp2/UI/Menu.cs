@@ -71,14 +71,12 @@ namespace ClinicApp2.UI
 
             Console.WriteLine("=== ADD PATIENT ===");
 
-            Console.Write("Name: ");
-            string name = Console.ReadLine()!;
+           
+            string name = InputHelper.ReadString("Name: ");
 
-            Console.Write("Phone Number: ");
-            string phone = Console.ReadLine()!;
+            string phone = InputHelper.ReadPhone("Phone: ");
 
-            Console.Write("Age: ");
-            int age = int.Parse(Console.ReadLine()!);
+            int age = InputHelper.ReadInt("Age: ");
 
             _patientService.AddPatient(name, phone, age);
 
@@ -142,8 +140,11 @@ namespace ClinicApp2.UI
 
             Console.Write("Appointment Date (yyyy-MM-dd HH:mm): ");
 
-            DateTime date =
-                DateTime.Parse(Console.ReadLine()!);
+            DateTime date;
+            while (!DateTime.TryParse(Console.ReadLine(), out date))
+            {
+                Console.WriteLine("Enter a valid date (example: 2026-05-15 14:00):");
+            }
 
             Console.Write("Treatment Type: ");
             string treatment = Console.ReadLine()!;
